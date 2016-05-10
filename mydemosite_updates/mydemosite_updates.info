@@ -1,0 +1,3 @@
+name = ProseMedia Updates
+description = Suppose to handle deployment and configuration on different environment on cloud
+core = 7.x

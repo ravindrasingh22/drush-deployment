@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall updates functions for the Protiviti site.
+ */
+
+/**
+ * JIRA-Ticket-ID with task title
+ * Implements hook_update_N().
+ * This is an example 
+ */
+function mydemosite_updates_update_7001() {
+  $module_list = array('devel');
+  if (!module_enable($module_list, TRUE)) {
+    throw new DrupalUpdateException('Something went wrong; A dependency was missing.');
+  }
+  $features = array(
+    'feature_module_name',
+  );
+  mydemosite_update_features_revert($features);
+}

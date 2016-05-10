@@ -1,0 +1,38 @@
+<?php
+
+/**
+ *  @file to handle all the updates
+ */
+
+/**
+ * Utility method for reverting features from our update hooks.
+ */
+function mydemosite_update_features_revert($modules = array()) {
+  drupal_flush_all_caches();
+  $results = array();
+  module_load_include('inc', 'features', 'features.export');
+  features_include();
+  // Process modules.
+  if (!empty($modules)) {
+    foreach ($modules as $module) {
+      if (($feature = features_load_feature($module, TRUE)) && module_exists($module)) {
+
+        $components = array();
+        // Forcefully revert all components of a feature.
+        foreach (array_keys($feature->info['features']) as $component) {
+          if (features_hook($component, 'features_revert')) {
+            $components[] = $component;
+          }
+        }
+        // Revert components.
+        if (!empty($components)) {
+          foreach ($components as $component) {
+            features_revert(array($module => array($component)));
+            $results[] = t('Reverted !module: !component', array('!module' => $module, '!component' => $component));
+          }
+        }
+      }
+    }
+  }
+  return $results;
+}
